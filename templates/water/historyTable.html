@@ -1,0 +1,61 @@
+<div class="container my-sm-2">
+    <div class="col-sm shadow-lg p-3 m-1 bg-body rounded">
+        <table class="table table-hover ">
+
+            <thead>
+            <tr>
+                <th class="col"> Date</th>
+                <th class="col"> Room</th>
+                <th class="col"> Bottle</th>
+                <th class="col"> Quantity</th>
+            </tr>
+            </thead>
+
+            <tbody id="history-table-body">
+
+            {% for date,rooms in history.items %}
+
+                <tr>
+                    <td>
+                        {{ date }}
+                    </td>
+
+                    {% for room,info in rooms.items %}
+
+                            <td>{{ room }}</td>
+                            <td>
+                                <table>
+                                    {% for bottle_name in info.bottle %}
+                                        <tr>
+                                            <td>{{ bottle_name }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+
+                            </td>
+                            <td>
+                                <table>
+                                    {% for bottle_quantity in info.quantity %}
+                                        <tr>
+                                            <td>
+                                                {{ bottle_quantity }}
+                                            </td>
+                                        </tr>
+
+                                    {% endfor %}
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                    {% endfor %}
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+    </div>
+</div>

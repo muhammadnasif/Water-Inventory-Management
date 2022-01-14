@@ -1,0 +1,9 @@
+.box{
+    margin: 1rem;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 180px;
+    overflow-x: hidden;
+}

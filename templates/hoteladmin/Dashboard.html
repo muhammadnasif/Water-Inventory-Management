@@ -1,0 +1,72 @@
+{% extends 'hoteladmin/admin.html' %}
+
+{% block Dashboard %}
+    <div class="container mt-sm-2">
+        <div class="row d-flex justify-content-evenly">
+
+            <div class="col-sm-4 me-2 shadow-lg p-3 bg-body rounded">
+                <div class="row">
+                    <p><h4>From: {{ fromDate }}</h4></p>
+                </div>
+                <div class="row">
+                    <p><h4>To: {{ toDate }}</h4></p>
+                </div>
+
+
+            </div>
+            <div class="col flex-grow-1 shadow-lg p-3 bg-body rounded">
+
+                {% include 'hoteladmin/DashboardDateInput.html' %}
+
+            </div>
+        </div>
+    </div>
+
+
+    {% include 'hoteladmin/PieChart_BarDiagram.html' %}
+
+
+    <div class="container mt-sm-2 ">
+        <div class="row d-flex justify-content-center">
+            <div class="shadow-lg p-3 bg-body rounded flex-grow-1">
+
+                <div class="text-center">
+                    <p>
+                    <h4>Sales Report</h4>
+                    </p>
+                </div>
+
+                <table class="table table-hover">
+                    <thead>
+                    <th class="col">Bottle</th>
+                    <th class="col">Quantity</th>
+                    <th class="col">Sold</th>
+                    <th class="col">Profit</th>
+                    </thead>
+                    <tbody>
+                    {% for value in table.values %}
+                        <tr>
+                            {% for info in value %}
+                                <td class="col">{{ info }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    {% include 'water/stockTable.html' %}
+
+    <div class="container mt-sm-2">
+        <div class="row d-flex justify-content-between">
+            {% include 'hoteladmin/AdminBrandTable.html' %}
+            {#        {% include 'AdminBottleTable.html' %}#}
+            {% include 'hoteladmin/AdminSizeTable.html' %}
+        </div>
+    </div>
+
+{% endblock %}

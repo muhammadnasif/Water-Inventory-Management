@@ -1,0 +1,47 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/login.css' %}" rel="stylesheet">
+
+    <title>Log In</title>
+</head>
+<body style="background-color: rgb(233,233,233);">
+
+<div class="container text-center">
+  <main class="form-signin">
+    <form action="{% url 'LogIn' %}" method="post">
+        {% csrf_token %}
+        <h1 class="h2 mb-4 fw-normal"><b>Water</b> Inventory</h1>
+      <div class="form-floating">
+        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" name="username" size="20" maxlength="60"><label for="floatingInput">Username:</label>
+      </div>
+
+      <div class="form-floating">
+        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password" size="20" maxlength="60"><label for="floatingPassword">Password:</label>
+      </div>
+    <p><input type="submit" name="submit" value="Login" class="w-100 btn btn-lg btn-primary"></p>
+    </form>
+  </main>
+</div>
+
+
+<!-- Optional JavaScript; choose one of the two! -->
+
+<!-- Option 1: Bootstrap Bundle with Popper -->
+
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+<!-- Option 2: Separate Popper and Bootstrap JS -->
+<!--
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+-->
+</body>
+</html>

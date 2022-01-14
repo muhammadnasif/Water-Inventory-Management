@@ -1,0 +1,37 @@
+<fieldset class="border p-sm-2 form-group">
+    <legend class="w-auto float-none" id="Legend5">
+        Date Range
+    </legend>
+    <form method="POST" action="">
+    {% csrf_token %}
+
+        <div class="row">
+
+            <div class="col">
+                <div class="form-floating">
+                    <input type="date" class="form-control" id="dashboard_from_input"
+                           name="dashboard_from"
+                           placeholder="From">
+                    <label for="dashboard_from_input">From</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating">
+                    <input type="date" class="form-control" id="dashboard_from_input"
+                           name="dashboard_to"
+                           placeholder="To">
+                    <label for="dashboard_from_input">From</label>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-3 mt-3 mb-1 ms-5">
+                <button type="submit" name="date_submit" class="btn btn-dark">Search</button>
+            </div>
+
+        </div>
+    </form>
+
+</fieldset>

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block newBottle_stockIn %}
+
+
+    {# ====== THIS FORM HERE IS FOR CreateNewBottleForm() and StockInForm() ======#}
+
+    <div class="container">
+
+        <div class="row d-flex justify-content-center mt-2">
+
+            {#         ========= THIS FORM IS FOR StockInForm() ===========#}
+            <div class="col-sm me-1 shadow-lg p-3 bg-body rounded">
+                <fieldset class="border p-sm-2 form-group">
+                    <legend class="w-auto float-none" id="Legend5">
+                        Stock in
+                    </legend>
+                    <form method="POST" id="create-Stock">
+                        {% crispy AddNewStock %}
+
+                    </form>
+
+                </fieldset>
+            </div>
+            {#         =========================================================#}
+
+            {#         =========== THIS BOTTLE IS FOR CreateBottleForm() ============#}
+            <div class="col-sm ms-1 shadow-lg p-3 bg-body rounded">
+
+                <fieldset class="border p-sm-2 form-group">
+                    <legend class="w-auto float-none" id="Legend5">
+                        New Bottle
+                    </legend>
+
+                    <form method="POST" id="create-new-bottle">
+                        {% crispy CreateNewBottleForm %}
+
+                    </form>
+
+                </fieldset>
+
+            </div>
+            {#         =========================================================#}
+        </div>
+    </div>
+
+    {# =====================================================================#}
+
+
+    {% include 'water/stockTable.html' %}
+
+
+{% endblock %}

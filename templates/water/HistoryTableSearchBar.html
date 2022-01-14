@@ -1,0 +1,31 @@
+{% load crispy_forms_tags %}
+<div class="container my-sm-2">
+    <div class="shadow-lg p-3 m-1 bg-body rounded">
+        {#        {% crispy historyTableFilterBar %}#}
+        <div class="row d-flex justify-content-between">
+            <div class="col-4">
+                <div class="form-floating">
+                    <input type="date" class="form-control" id="id_DateFrom"
+                           name="dashboard_from"
+                           placeholder="From">
+                    <label for="id_DateFrom">From</label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-floating">
+                    <input type="date" class="form-control" id="id_DateTo"
+                           name="dashboard_from"
+                           placeholder="From">
+                    <label for="id_DateTo">To</label>
+                </div>
+            </div>
+            <div class="col-2">
+                <input type="button" name="history-filter" value="Filter"
+                       class="btn btn-dark btn-outline-success text-white me-2 mt-2" id="button-id-history-filter">
+            </div>
+
+        </div>
+
+
+    </div>
+</div>

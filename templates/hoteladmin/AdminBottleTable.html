@@ -1,0 +1,45 @@
+<div class="col-sm-5">
+    <div class="card border-light border-light mb-3 shadow rounded-3">
+        <div class="card-header rounded-3">
+            <div class="text-center">
+                <h5>Bottle</h5>
+            </div>
+        </div>
+        <div class="card-body text-dark">
+
+            <table class="table table-hover ">
+                <thead>
+                <tr>
+                    <th class="col">
+                        <div class="text-center">
+                            Type
+                        </div>
+                    </th>
+                    <th class="col">
+                        <div class="text-center">
+                            Action
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="admin-bottle-table-body">
+
+                {% for bottle in BottleDetails %}
+                    <tr>
+                        <td>{{ bottle }}</td>
+                        <td>
+                            <div class="text-center">
+                                <input type="button" class="btn-sm btn-dark btn-del" data-sid="{{ bottle.id }}" value="Delete">
+                            </div>
+
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+</div>

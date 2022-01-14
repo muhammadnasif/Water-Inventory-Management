@@ -1,0 +1,74 @@
+<div class="container mt-sm-2">
+    <div class="row d-flex">
+        <div class="col-5 shadow-lg p-3 bg-body rounded">
+
+            {% include "hoteladmin/ProfitPieChart.html" %}
+
+        </div>
+        <div class="col flex-grow-1">
+            <div class="row d-flex">
+                <div class="col shadow-lg p-3 mx-2 mb-2 bg-body rounded" >
+                    <div class="row">
+                        <p>
+                        <h3>Total Sold</h3>
+                        </p>
+                    </div>
+                    <hr>
+                    <div class="row d-flex justify-content-end">
+                        <div class="col-4">
+                            <h4>{{ totalSold }}</h4>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col shadow-lg p-3 mb-2 bg-body rounded ">
+                    <div class="row">
+                        <p class="text-start">
+                        <h3>Total Profit</h3></p>
+                    </div>
+                    <hr>
+                    <div class="row d-flex justify-content-end">
+                        <div class="col-4">
+                            <h4>{{ totalProfit }}</h4>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row d-flex">
+
+                <div class="col-sm shadow-lg p-3 ms-2 bg-body rounded">
+                    <fieldset class="border p-sm-2 form-group">
+                        <legend class="w-auto float-none" id="Legend5">
+                            Create Brand
+                        </legend>
+
+                        {% include 'hoteladmin/CreateBrand.html' %}
+
+                    </fieldset>
+
+                </div>
+
+
+            </div>
+
+            <div class="row">
+
+                    <div class="col-sm shadow-lg p-3 mt-2 ms-2 bg-body rounded">
+                        <fieldset class="border p-sm-2 form-group">
+                            <legend class="w-auto float-none" id="Legend5">
+                                Create Size
+                            </legend>
+
+                            {% include 'hoteladmin/CreateSize.html' %}
+
+                        </fieldset>
+
+                    </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>

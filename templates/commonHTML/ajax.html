@@ -1,0 +1,602 @@
+<script>
+
+    {# button-id-sell #}
+    $('#button-id-sell').click(function () {
+        let rm = $('#id_room').val();
+        let btl = $('#id_bottle').val();
+        let qt = $('#id_quantity').val();
+        let dt = $('#id_date').val();
+        let csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+        historyTableContent = ""
+        mydata = {
+            room: rm,
+            bottle: btl,
+            quantity: qt,
+            date: dt,
+            csrfmiddlewaretoken: csrf_token,
+        }
+
+        $.ajax(
+            {
+                url: "{% url 'sellBottleMethod' %}",
+                method: 'POST',
+                data: mydata,
+                success: function (data) {
+                    $("form")[0].reset();
+
+                    x = data.history
+                    dateHTML = ""
+                    for (var date of Object.keys(x)) {
+
+                        dateHTML += "<tr><td>" + date + "</td>"
+
+                        for (var room of Object.keys(x[date])) {
+
+                            roomHTML = "<td>" + room + "</td>"
+                            for (var info of Object.values(x[date][room])) {
+
+                                arrLen = info.length
+                                bottleNameQuantity = ""
+                                for (i = 0; i < arrLen; i++) {
+                                    bottleNameQuantity += "<tr><td>" + info[i] + "</td></tr>"
+                                }
+                                bottleNameQuantity = "<td><table>" + bottleNameQuantity + "</table></td>"
+                                roomHTML += bottleNameQuantity
+                            }
+                            dateHTML = dateHTML + roomHTML + "</tr><tr><td></td>"
+                        }
+
+
+                    }
+                    historyTableContent = dateHTML + "</tr>"
+                    console.log(historyTableContent)
+                    $("#history-table-body").html(historyTableContent);
+
+                }
+            }
+        )
+
+    })
+
+    $('#button-id-add-stock').click(function () {
+        let stk = $('#id_stock').val();
+        let qt = $('#id_quantity').val();
+        let csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+        output = ""
+        main_content = ""
+
+        mydata = {
+            stock: stk,
+            quantity: qt,
+            csrfmiddlewaretoken: csrf_token,
+        }
+        $.ajax(
+            {
+                url: "{% url 'addNewStockMethod' %}",
+                method: 'POST',
+                data: mydata,
+                success: function (data) {
+                    $("#create-Stock")[0].reset();
+                    x = data.bottleSize
+                    output = "<th class='col'> Brand/Size</th>"
+                    for (var size of Object.keys(x)) {
+                        output += "<th class='col'> " + x[size] + "</th>"
+                    }
+                    $("stock-table-head").html(output)
+
+
+                    output = ""
+
+                    x = data.StockTable
+                    main_content = ""
+                    for (var key of Object.keys(x)) {
+                        quantity = ""
+                        for (var info of Object.values(x[key])) {
+
+                            quantity += "<td>" + info + "</td>"
+                        }
+                        row = "<tr><td>" + key + "</td>" + quantity + "</tr>"
+                        main_content += row
+                    }
+
+                    $("#stock-table-body").html(main_content)
+                }
+            }
+        )
+
+    })
+
+    $('#button-id-create-bottle').click(function () {
+        let brd = $('#id_brand').val();
+        let sz = $('#id_size').val();
+        let bp = $('#id_buyPrice').val();
+        let sp = $('#id_sellPrice').val();
+        let csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+        output = '<option value="" selected="">---------</option>'
+        mydata = {
+            brand: brd,
+            size: sz,
+            buyPrice: bp,
+            sellPrice: sp,
+            csrfmiddlewaretoken: csrf_token,
+        }
+        $.ajax(
+            {
+                url: "{% url 'createNewBottleMethod' %}",
+                method: 'POST',
+                data: mydata,
+                success: function (data) {
+                    $("#create-new-bottle")[0].reset();
+
+                    x = data.bottleDetailsDropdown
+                    for (key of Object.keys(x)) {
+                        output += "<option value='" + key + "'>" + x[key] + "</option>"
+
+                    }
+                    document.getElementById("id_stock").innerHTML=output
+                }
+            }
+        )
+
+    })
+
+    $("#admin-bottle-table-body").on("click", ".btn-del", function () {
+        console.log("delete button clicked");
+        let id = $(this).attr('data-sid')
+        let csrf_token = $('input[name="csrfmiddlewaretoken"]').val()
+        console.log(id)
+        mythis = this
+        mydata = {
+            sid: id,
+            csrfmiddlewaretoken: csrf_token,
+        }
+        $.ajax({
+            url: "{% url 'DeleteBottleDetails' %}",
+            method: "POST",
+            data: mydata,
+            success: function (data) {
+                console.log(data);
+                if (data.status == 1) {
+                    console.log('Data deleted successfully')
+                    $(mythis).closest("tr").fadeOut()
+                }
+            }
+        })
+    })
+
+    $('#button-id-create-brand').click(function () {
+        let brd = $('#id_brand').val();
+
+        let csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+        main_content = ""
+        output = ""
+
+        mydata = {
+            brand: brd,
+            csrfmiddlewaretoken: csrf_token,
+        }
+        $.ajax(
+            {
+                url: "{% url 'CreateBrand' %}",
+                method: 'POST',
+                data: mydata,
+                success: function (data) {
+                    $("#create-brand-form")[0].reset();
+
+                    {#console.log("Brand Created")#}
+                    {#console.log(data.brand)#}
+                    x = data.brand
+                    len = x.length
+                    console.log("Length -- " + len)
+                    for (key of Object.values(x)) {
+                        console.log(key)
+                        main_content += "<tr><td class='col'><div class='text-center'>" + key.brand_name + "</div></td><td>" +
+                            "<div class='text-center'><input type='button' class='btn-sm btn-dark btn-del' value='Delete' " +
+                            "data-sid='" + key.brand_name + "'></div></td></tr>"
+                    }
+                    $("#admin-brand-table-body").html(main_content)
+
+                    x = data.bottleSize
+                    output = "<th class='col'> Brand/Size</th>"
+                    for (var size of Object.keys(x)) {
+                        output += "<th class='col'> " + x[size] + "</th>"
+                    }
+                    $("stock-table-head").html(output)
+
+
+                    output = ""
+
+                    x = data.StockTable
+                    main_content = ""
+                    for (var key of Object.keys(x)) {
+                        quantity = ""
+                        for (var info of Object.values(x[key])) {
+
+                            quantity += "<td>" + info + "</td>"
+                        }
+                        row = "<tr><td>" + key + "</td>" + quantity + "</tr>"
+                        main_content += row
+                    }
+
+                    $("#stock-table-body").html(main_content)
+
+                }
+            }
+        )
+
+    })
+
+    $("#admin-brand-table-body").on("click", ".btn-del", function () {
+        console.log("delete button clicked");
+        let id = $(this).attr('data-sid')
+        let csrf_token = $('input[name="csrfmiddlewaretoken"]').val()
+        output = ""
+        main_content = ""
+
+        console.log(id)
+        mythis = this
+        mydata = {
+            sid: id,
+            csrfmiddlewaretoken: csrf_token,
+        }
+        $.ajax({
+            url: "{% url 'DeleteBrand' %}",
+            method: "POST",
+            data: mydata,
+            success: function (data) {
+                if (data.status == 1) {
+                    console.log('Data deleted successfully')
+                    $(mythis).closest("tr").fadeOut()
+
+
+                    x = data.bottleSize
+                    output = "<th class='col'> Brand/Size</th>"
+                    for (var size of Object.keys(x)) {
+                        output += "<th class='col'> " + x[size] + "</th>"
+                    }
+                    $("stock-table-head").html(output)
+
+
+                    output = ""
+
+                    x = data.StockTable
+                    main_content = ""
+                    for (var key of Object.keys(x)) {
+                        quantity = ""
+                        for (var info of Object.values(x[key])) {
+
+                            quantity += "<td>" + info + "</td>"
+                        }
+                        row = "<tr><td>" + key + "</td>" + quantity + "</tr>"
+                        main_content += row
+                    }
+
+                    $("#stock-table-body").html(main_content)
+
+                }
+
+            }
+        })
+    })
+
+    $('#button-id-create-size').click(function () {
+        let sz = $('#id_size').val();
+
+        let csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+        console.log("Create Size form clicked")
+
+        main_content = ""
+        output = ""
+
+        mydata = {
+            size: sz,
+            csrfmiddlewaretoken: csrf_token,
+        }
+        $.ajax(
+            {
+                url: "{% url 'CreateSize' %}",
+                method: 'POST',
+                data: mydata,
+                success: function (data) {
+                    $("#create-size-form")[0].reset();
+
+                    {#console.log("Brand Created")#}
+                    {#console.log(data.brand)#}
+                    x = data.sizeTable
+
+                    for (key of Object.values(x)) {
+                        console.log(key)
+                        main_content += "<tr><td class='col'><div class='text-center'>" + key.bottle_size + "</div></td><td>" +
+                            "<div class='text-center'><input type='button' class='btn-sm btn-dark btn-del' value='Delete' " +
+                            "data-sid='" + key.bottle_size + "'></div></td></tr>"
+                    }
+                    $("#admin-size-table-body").html(main_content)
+
+
+                    {#x = data.bottleSize#}
+                    output = "<th class='col'> Brand/Size</th>"
+                    for (key of Object.values(x)) {
+                        console.log(key.bottle_size)
+                        console.log("<th class='col'> " + key.bottle_size + "</th>")
+                        output += "<th class='col'> " + key.bottle_size + "</th>"
+                    }
+                    output = "<tr>" + output + "</tr>"
+
+                    document.getElementById("stock-table-head").innerHTML = output;
+
+
+                    output = ""
+
+                    x = data.StockTable
+                    main_content = ""
+                    for (var key of Object.keys(x)) {
+                        quantity = ""
+                        for (var info of Object.values(x[key])) {
+
+                            quantity += "<td>" + info + "</td>"
+                        }
+                        row = "<tr><td>" + key + "</td>" + quantity + "</tr>"
+                        main_content += row
+                    }
+
+                    $("#stock-table-body").html(main_content)
+
+                }
+            }
+        )
+
+    })
+
+    $("#admin-size-table-body").on("click", ".btn-del", function () {
+        console.log("delete button clicked");
+        let id = $(this).attr('data-sid')
+        let csrf_token = $('input[name="csrfmiddlewaretoken"]').val()
+        output = ""
+        main_content = ""
+
+        console.log(id)
+        mythis = this
+        mydata = {
+            sid: id,
+            csrfmiddlewaretoken: csrf_token,
+        }
+        $.ajax({
+            url: "{% url 'DeleteSize' %}",
+            method: "POST",
+            data: mydata,
+            success: function (data) {
+                console.log(data)
+                if (data.status == 1) {
+                    console.log('Data deleted successfully')
+                    $(mythis).closest("tr").fadeOut()
+
+
+                    x = data.sizeTable
+
+                    for (key of Object.values(x)) {
+                        console.log(key)
+                        main_content += "<tr><td class='col'><div class='text-center'>" + key.bottle_size + "</div></td><td>" +
+                            "<div class='text-center'><input type='button' class='btn-sm btn-dark btn-del' value='Delete' " +
+                            "data-sid='" + key.bottle_size + "'></div></td></tr>"
+                    }
+                    $("#admin-size-table-body").html(main_content)
+
+
+                    {#x = data.bottleSize#}
+                    output = "<th class='col'> Brand/Size</th>"
+                    for (key of Object.values(x)) {
+                        console.log(key.bottle_size)
+                        console.log("<th class='col'> " + key.bottle_size + "</th>")
+                        output += "<th class='col'> " + key.bottle_size + "</th>"
+                    }
+                    output = "<tr>" + output + "</tr>"
+
+                    document.getElementById("stock-table-head").innerHTML = output;
+
+
+                    output = ""
+
+                    x = data.StockTable
+                    main_content = ""
+                    for (var key of Object.keys(x)) {
+                        quantity = ""
+                        for (var info of Object.values(x[key])) {
+
+                            quantity += "<td>" + info + "</td>"
+                        }
+                        row = "<tr><td>" + key + "</td>" + quantity + "</tr>"
+                        main_content += row
+                    }
+
+                    $("#stock-table-body").html(main_content)
+                }
+
+            }
+        })
+    })
+
+    $("#button-id-history-filter").click(function () {
+        let dFrom = $('#id_DateFrom').val();
+        let dTo = $('#id_DateTo').val();
+        let csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+        console.log(dFrom)
+        console.log(dTo)
+        mydata = {
+            dateFrom: dFrom,
+            dateTo: dTo,
+            csrfmiddlewaretoken: csrf_token,
+        }
+
+        $.ajax(
+            {
+                url: "{% url 'FilterSearch' %}",
+                method: 'POST',
+                data: mydata,
+                success: function (data) {
+                    $('#id_DateFrom').val("mm/dd/yyyy");
+                    $('#id_DateTo').val("mm/dd/yyyy");
+                    $("form")[0].reset();
+
+                    x = data.history
+                    dateHTML = ""
+                    for (var date of Object.keys(x)) {
+
+                        dateHTML += "<tr><td>" + date + "</td>"
+
+                        for (var room of Object.keys(x[date])) {
+
+                            roomHTML = "<td>" + room + "</td>"
+                            for (var info of Object.values(x[date][room])) {
+
+                                arrLen = info.length
+                                bottleNameQuantity = ""
+                                for (i = 0; i < arrLen; i++) {
+                                    bottleNameQuantity += "<tr><td>" + info[i] + "</td></tr>"
+                                }
+                                bottleNameQuantity = "<td><table>" + bottleNameQuantity + "</table></td>"
+                                roomHTML += bottleNameQuantity
+                            }
+                            dateHTML = dateHTML + roomHTML + "</tr><tr><td></td>"
+                        }
+
+
+                    }
+                    historyTableContent = dateHTML + "</tr>"
+                    console.log(historyTableContent)
+                    $("#history-table-body").html(historyTableContent);
+
+                }
+            }
+        )
+
+    })
+
+    $("#button-id-undo").click(function () {
+        let dFrom = $('#id_DateFrom').val();
+        let dTo = $('#id_DateTo').val();
+        let csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+
+        console.log(dFrom)
+        console.log(dTo)
+        mydata = {
+            dateFrom: dFrom,
+            dateTo: dTo,
+            csrfmiddlewaretoken: csrf_token,
+        }
+
+        $.ajax(
+            {
+                url: "{% url 'HistoryDetailsUndo' %}",
+                method: 'POST',
+                data: mydata,
+                success: function (data) {
+
+                    console.log("data undo done ...")
+
+                    x = data.history
+                    dateHTML = ""
+                    for (var date of Object.keys(x)) {
+
+                        dateHTML += "<tr><td>" + date + "</td>"
+
+                        for (var room of Object.keys(x[date])) {
+
+                            roomHTML = "<td>" + room + "</td>"
+                            for (var info of Object.values(x[date][room])) {
+
+                                arrLen = info.length
+                                bottleNameQuantity = ""
+                                for (i = 0; i < arrLen; i++) {
+                                    bottleNameQuantity += "<tr><td>" + info[i] + "</td></tr>"
+                                }
+                                bottleNameQuantity = "<td><table>" + bottleNameQuantity + "</table></td>"
+                                roomHTML += bottleNameQuantity
+                            }
+                            dateHTML = dateHTML + roomHTML + "</tr><tr><td></td>"
+                        }
+
+
+                    }
+                    historyTableContent = dateHTML + "</tr>"
+                    console.log(historyTableContent)
+                    $("#history-table-body").html(historyTableContent);
+
+                }
+            }
+        )
+
+    })
+
+    $('#button-id-complimentary').click(function () {
+        let rm = $('#id_room').val();
+        let btl = $('#id_bottle').val();
+        let qt = $('#id_quantity').val();
+        let dt = $('#id_date').val();
+        let csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+        historyTableContent = ""
+        mydata = {
+            room: rm,
+            bottle: btl,
+            quantity: qt,
+            date: dt,
+            csrfmiddlewaretoken: csrf_token,
+        }
+
+        $.ajax(
+            {
+                url: "{% url 'sellBottleComplimentary' %}",
+                method: 'POST',
+                data: mydata,
+                success: function (data) {
+                    $("form")[0].reset();
+
+                    x = data.history
+                    dateHTML = ""
+                    for (var date of Object.keys(x)) {
+
+                        dateHTML += "<tr><td>" + date + "</td>"
+
+                        for (var room of Object.keys(x[date])) {
+
+                            roomHTML = "<td>" + room + "</td>"
+                            for (var info of Object.values(x[date][room])) {
+
+                                arrLen = info.length
+                                bottleNameQuantity = ""
+                                for (i = 0; i < arrLen; i++) {
+                                    bottleNameQuantity += "<tr><td>" + info[i] + "</td></tr>"
+                                }
+                                bottleNameQuantity = "<td><table>" + bottleNameQuantity + "</table></td>"
+                                roomHTML += bottleNameQuantity
+                            }
+                            dateHTML = dateHTML + roomHTML + "</tr><tr><td></td>"
+                        }
+
+
+                    }
+                    historyTableContent = dateHTML + "</tr>"
+                    console.log(historyTableContent)
+                    $("#history-table-body").html(historyTableContent);
+
+                }
+            }
+        )
+
+    })
+
+    function getData(obj) {
+        var myData = obj.data.item, i, output = '';
+
+        for (i = 0; i < myData.length; i += 1) {
+            for (key in myData[i]) {
+                output += key + " : " + myData[i][key];
+            }
+        }
+        return output;
+    }
+
+</script>

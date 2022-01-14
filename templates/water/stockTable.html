@@ -1,0 +1,39 @@
+<div class="container">
+    <div class="row d-flex justify-content-center mt-2">
+        <div class="shadow-lg p-3 bg-body rounded flex-grow-1">
+            <div class="text-center">
+                <p>
+                <h4>Stock Report</h4>
+                </p>
+            </div>
+            <table class="table table-hover ">
+
+                <thead id="stock-table-head">
+                <th class="col"> Brand/Size</th>
+                {% for key,value in bottleSize.items %}
+                    <th class="col"> {{ key }}</th>
+                {% endfor %}
+                </thead>
+
+                <tbody id="stock-table-body">
+
+                {% for key,value in StockTable.items %}
+                    <tr>
+                        <td>
+                            {{ key }}
+                        </td>
+                        {% for bottle,size in value.items %}
+                            <td>
+                                {{ size }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>

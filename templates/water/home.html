@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block SellBottleFormContent %}
+    {# ====== THIS CODE HERE IS FOR SellBottleForm() =========== #}
+
+    <div class="container my-sm-2">
+        <div class="d-flex justify-content-center align-content-center">
+            <div class="col-sm shadow-lg p-3 m-1 bg-body rounded">
+                <fieldset class="border p-sm-2 form-group">
+                    <legend class="w-auto float-none" id="Legend5">
+                        Sell Bottle
+                    </legend>
+                    {% crispy SellBottleForm %}
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+    {# ========================================================== #}
+    {% include 'water/HistoryTableSearchBar.html'%}
+
+    {% include 'water/historyTable.html' %}
+
+{% endblock %}
+
