@@ -22,35 +22,49 @@
                 method: 'POST',
                 data: mydata,
                 success: function (data) {
-                    $("form")[0].reset();
+                    if (data.status == 0) {
+                        $("form")[0].reset();
 
-                    x = data.history
-                    dateHTML = ""
-                    for (var date of Object.keys(x)) {
+                        x = data.history
+                        dateHTML = ""
+                        for (var date of Object.keys(x)) {
 
-                        dateHTML += "<tr><td>" + date + "</td>"
+                            dateHTML += "<tr><td>" + date + "</td>"
 
-                        for (var room of Object.keys(x[date])) {
+                            for (var room of Object.keys(x[date])) {
 
-                            roomHTML = "<td>" + room + "</td>"
-                            for (var info of Object.values(x[date][room])) {
+                                roomHTML = "<td>" + room + "</td>"
+                                for (var info of Object.values(x[date][room])) {
 
-                                arrLen = info.length
-                                bottleNameQuantity = ""
-                                for (i = 0; i < arrLen; i++) {
-                                    bottleNameQuantity += "<tr><td>" + info[i] + "</td></tr>"
+                                    arrLen = info.length
+                                    bottleNameQuantity = ""
+                                    for (i = 0; i < arrLen; i++) {
+                                        bottleNameQuantity += "<tr><td>" + info[i] + "</td></tr>"
+                                    }
+                                    bottleNameQuantity = "<td><table>" + bottleNameQuantity + "</table></td>"
+                                    roomHTML += bottleNameQuantity
                                 }
-                                bottleNameQuantity = "<td><table>" + bottleNameQuantity + "</table></td>"
-                                roomHTML += bottleNameQuantity
+                                dateHTML = dateHTML + roomHTML + "</tr><tr><td></td>"
                             }
-                            dateHTML = dateHTML + roomHTML + "</tr><tr><td></td>"
+
+
                         }
+                        historyTableContent = dateHTML + "</tr>"
+                        console.log(historyTableContent)
+                        $("#history-table-body").html(historyTableContent);
 
 
+                        document.getElementById('notification_head_strong_id').innerHTML = "Success"
+                        document.getElementById('notification_body_id').innerHTML = "Bottle sold to <b>" + mydata.room + "</b>"
+                        $("#toast_room").toast("show")
+
+                    } else {
+
+                        document.getElementById('notification_head_strong_id').innerHTML = "<div class='text-warning'>Failed</div>"
+                        document.getElementById('notification_body_id').innerHTML = "Not enough " + mydata.bottle + " in stock"
+                        $("#toast_room").toast("show")
                     }
-                    historyTableContent = dateHTML + "</tr>"
-                    console.log(historyTableContent)
-                    $("#history-table-body").html(historyTableContent);
+
 
                 }
             }
@@ -100,6 +114,12 @@
                     }
 
                     $("#stock-table-body").html(main_content)
+
+                    document.getElementById('notification_head_strong_id').innerHTML = "Success"
+                    document.getElementById('notification_body_id').innerHTML = "Bottle added successfully"
+                    $("#toast_room").toast("show")
+
+
                 }
             }
         )
@@ -134,7 +154,13 @@
                         output += "<option value='" + key + "'>" + x[key] + "</option>"
 
                     }
-                    document.getElementById("id_stock").innerHTML=output
+                    document.getElementById("id_stock").innerHTML = output
+
+                    document.getElementById('notification_head_strong_id').innerHTML = "Success"
+                    document.getElementById('notification_body_id').innerHTML = "New bottle entried to database"
+                    $("#toast_room").toast("show")
+
+
                 }
             }
         )
@@ -582,6 +608,9 @@
                     console.log(historyTableContent)
                     $("#history-table-body").html(historyTableContent);
 
+                    document.getElementById('notification_head_strong_id').innerHTML = "Complimentary"
+                    document.getElementById('notification_body_id').innerHTML = "Given to <b> "+ mydata.room + " as <b>Complimentary</b>"
+                    $("#toast_room").toast("show")
                 }
             }
         )
