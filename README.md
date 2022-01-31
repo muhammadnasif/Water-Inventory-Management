@@ -25,4 +25,13 @@ For the staff, a form is given at the homepage for bottle selling. And on the 'S
 
 In the home page he can filter the bottles sold to a certain room.
 
+---
+## Notification
+---
+Notification message has been added for the **STAFF PANEL** whenever a new bottle has been added or stocked-in or a bottle has been sold to a certain room.
+
+For the notification, Bootstrap Toast is used.
+
+
+
 
