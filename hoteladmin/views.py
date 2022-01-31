@@ -224,9 +224,17 @@ def RemoveSession(request):
 
 # this method is for user authentication
 def LogIn(request):
+    # if an user is already logged in and requests the login page then
+    # first check if any user is already logged. If an user is logged
+    # then redirect him to his corresponding home page. Otherwise restrict
+    # him to go to any page without user authentication
     if 'username' in request.session:
+        # Check which type of user is already logged and then redirect them
+        # to their corresponding Home Page
         if request.session['designation'] == 'ceo':
             return redirect(LoadDashboard)
+        else:
+            return redirect(water_views.LoadHome)
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
@@ -240,4 +248,5 @@ def LogIn(request):
                 return redirect(LoadDashboard)
             else:
                 return redirect(water_views.LoadHome)
+
     return render(request, 'commonHTML/LogIn.html', {})

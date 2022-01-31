@@ -70,7 +70,7 @@ def LoadStatus(request):
 # This method is used to sell bottles and record the history in the
 # HISTORY, HISTORY_DETAILS table.
 def sellBottleMethod(request, notComp=1):
-    notEnough = 1
+    notEnough = 0
     if request.method == "POST":
         form = SellBottleForm(request.POST)
 
@@ -106,7 +106,7 @@ def sellBottleMethod(request, notComp=1):
                         totalBottleStock += bottleStockObj.quantity
 
                 if totalBottleStock >= quantity:
-                    notEnough = 0
+                    notEnough = 1
                     for bottleDetailsObj in bottle_details:
                         bottleStockObj = STOCK.objects.filter(stock_name_id=bottleDetailsObj.pk)
                         # check if that record of BOTTLE_HISTORY exists in the STOCK table
@@ -170,7 +170,7 @@ def sellBottleMethod(request, notComp=1):
                 #     # ========================================================
                 #     print("Not sufficient bottle in stock")
                 else:
-                    notEnough = 1
+                    notEnough = 0
     context = {
         'status': notEnough,
         'history': getHistory(),

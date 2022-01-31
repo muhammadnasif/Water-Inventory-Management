@@ -22,7 +22,7 @@
                 method: 'POST',
                 data: mydata,
                 success: function (data) {
-                    if (data.status == 0) {
+                    if (data.status == 1) {
                         $("form")[0].reset();
 
                         x = data.history
@@ -61,7 +61,7 @@
                     } else {
 
                         document.getElementById('notification_head_strong_id').innerHTML = "<div class='text-warning'>Failed</div>"
-                        document.getElementById('notification_body_id').innerHTML = "Not enough " + mydata.bottle + " in stock"
+                        document.getElementById('notification_body_id').innerHTML = "Not enough bottle in stock"
                         $("#toast_room").toast("show")
                     }
 
@@ -578,39 +578,48 @@
                 method: 'POST',
                 data: mydata,
                 success: function (data) {
-                    $("form")[0].reset();
 
-                    x = data.history
-                    dateHTML = ""
-                    for (var date of Object.keys(x)) {
+                    if (data.status == 1) {
+                        $("form")[0].reset();
 
-                        dateHTML += "<tr><td>" + date + "</td>"
+                        x = data.history
+                        dateHTML = ""
+                        for (var date of Object.keys(x)) {
 
-                        for (var room of Object.keys(x[date])) {
+                            dateHTML += "<tr><td>" + date + "</td>"
 
-                            roomHTML = "<td>" + room + "</td>"
-                            for (var info of Object.values(x[date][room])) {
+                            for (var room of Object.keys(x[date])) {
 
-                                arrLen = info.length
-                                bottleNameQuantity = ""
-                                for (i = 0; i < arrLen; i++) {
-                                    bottleNameQuantity += "<tr><td>" + info[i] + "</td></tr>"
+                                roomHTML = "<td>" + room + "</td>"
+                                for (var info of Object.values(x[date][room])) {
+
+                                    arrLen = info.length
+                                    bottleNameQuantity = ""
+                                    for (i = 0; i < arrLen; i++) {
+                                        bottleNameQuantity += "<tr><td>" + info[i] + "</td></tr>"
+                                    }
+                                    bottleNameQuantity = "<td><table>" + bottleNameQuantity + "</table></td>"
+                                    roomHTML += bottleNameQuantity
                                 }
-                                bottleNameQuantity = "<td><table>" + bottleNameQuantity + "</table></td>"
-                                roomHTML += bottleNameQuantity
+                                dateHTML = dateHTML + roomHTML + "</tr><tr><td></td>"
                             }
-                            dateHTML = dateHTML + roomHTML + "</tr><tr><td></td>"
+
+
                         }
+                        historyTableContent = dateHTML + "</tr>"
+                        console.log(historyTableContent)
+                        $("#history-table-body").html(historyTableContent);
 
-
+                        document.getElementById('notification_head_strong_id').innerHTML = "Complimentary"
+                        document.getElementById('notification_body_id').innerHTML = "Given to <b> " + mydata.room + " as <b>Complimentary</b>"
+                        $("#toast_room").toast("show")
+                    } else {
+                        document.getElementById('notification_head_strong_id').innerHTML = "<div class='text-warning'>Failed</div>"
+                        document.getElementById('notification_body_id').innerHTML = "Not enough bottle in stock"
+                        $("#toast_room").toast("show")
                     }
-                    historyTableContent = dateHTML + "</tr>"
-                    console.log(historyTableContent)
-                    $("#history-table-body").html(historyTableContent);
 
-                    document.getElementById('notification_head_strong_id').innerHTML = "Complimentary"
-                    document.getElementById('notification_body_id').innerHTML = "Given to <b> "+ mydata.room + " as <b>Complimentary</b>"
-                    $("#toast_room").toast("show")
+
                 }
             }
         )
