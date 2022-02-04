@@ -13,7 +13,7 @@ class DatePicker(forms.DateInput):
 # This form is used to sell a product. The ROOM is taken as input to store
 # the history of the sold products to a certain room
 class SellBottleForm(forms.Form):
-    room = forms.ModelChoiceField(queryset=ROOM.objects.all(), initial=0)
+    room = forms.ModelChoiceField(queryset=ROOM.objects.all().order_by('room_no'), initial=0)
     bottle = forms.ModelChoiceField(queryset=BOTTLE.objects.all(), initial=0)
     quantity = forms.IntegerField(widget=forms.TextInput(attrs={'placeholder': 'Quantity'}))
     date = forms.DateField(initial=datetime.date.today(), widget=DatePicker)

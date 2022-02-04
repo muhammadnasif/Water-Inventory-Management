@@ -9,3 +9,4 @@ class USER(models.Model):
 
     def __str__(self):
         return self.username + " | " + self.designation
+
