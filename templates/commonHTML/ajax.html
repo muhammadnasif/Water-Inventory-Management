@@ -25,33 +25,7 @@
                     if (data.status == 1) {
                         $("form")[0].reset();
 
-                        x = data.history
-                        dateHTML = ""
-                        for (var date of Object.keys(x)) {
-
-                            dateHTML += "<tr><td>" + date + "</td>"
-
-                            for (var room of Object.keys(x[date])) {
-
-                                roomHTML = "<td>" + room + "</td>"
-                                for (var info of Object.values(x[date][room])) {
-
-                                    arrLen = info.length
-                                    bottleNameQuantity = ""
-                                    for (i = 0; i < arrLen; i++) {
-                                        bottleNameQuantity += "<tr><td>" + info[i] + "</td></tr>"
-                                    }
-                                    bottleNameQuantity = "<td><table>" + bottleNameQuantity + "</table></td>"
-                                    roomHTML += bottleNameQuantity
-                                }
-                                dateHTML = dateHTML + roomHTML + "</tr><tr><td></td>"
-                            }
-
-
-                        }
-                        historyTableContent = dateHTML + "</tr>"
-                        console.log(historyTableContent)
-                        $("#history-table-body").html(historyTableContent);
+                        recreate_history_table(data)
 
 
                         document.getElementById('notification_head_strong_id').innerHTML = "Success"
@@ -521,36 +495,32 @@
                 data: mydata,
                 success: function (data) {
 
-                    console.log("data undo done ...")
+                    recreate_history_table(data)
 
-                    x = data.history
-                    dateHTML = ""
-                    for (var date of Object.keys(x)) {
-
-                        dateHTML += "<tr><td>" + date + "</td>"
-
-                        for (var room of Object.keys(x[date])) {
-
-                            roomHTML = "<td>" + room + "</td>"
-                            for (var info of Object.values(x[date][room])) {
-
-                                arrLen = info.length
-                                bottleNameQuantity = ""
-                                for (i = 0; i < arrLen; i++) {
-                                    bottleNameQuantity += "<tr><td>" + info[i] + "</td></tr>"
-                                }
-                                bottleNameQuantity = "<td><table>" + bottleNameQuantity + "</table></td>"
-                                roomHTML += bottleNameQuantity
-                            }
-                            dateHTML = dateHTML + roomHTML + "</tr><tr><td></td>"
-                        }
-
-
-                    }
-                    historyTableContent = dateHTML + "</tr>"
                     console.log(historyTableContent)
                     $("#history-table-body").html(historyTableContent);
 
+                }
+            }
+        )
+
+    })
+
+
+    $("#history_table_id").on("click", ".btn-remove-entry", function () {
+        console.log("btn remove pressed")
+
+        mydata = {
+            history_detail_id: $(this).attr('data-history-detail')
+        }
+
+        $.ajax(
+            {
+                url: "{% url 'remove_entry' %}",
+                method: 'GET',
+                data: mydata,
+                success: function (data) {
+                    recreate_history_table(data)
                 }
             }
         )
@@ -582,33 +552,7 @@
                     if (data.status == 1) {
                         $("form")[0].reset();
 
-                        x = data.history
-                        dateHTML = ""
-                        for (var date of Object.keys(x)) {
-
-                            dateHTML += "<tr><td>" + date + "</td>"
-
-                            for (var room of Object.keys(x[date])) {
-
-                                roomHTML = "<td>" + room + "</td>"
-                                for (var info of Object.values(x[date][room])) {
-
-                                    arrLen = info.length
-                                    bottleNameQuantity = ""
-                                    for (i = 0; i < arrLen; i++) {
-                                        bottleNameQuantity += "<tr><td>" + info[i] + "</td></tr>"
-                                    }
-                                    bottleNameQuantity = "<td><table>" + bottleNameQuantity + "</table></td>"
-                                    roomHTML += bottleNameQuantity
-                                }
-                                dateHTML = dateHTML + roomHTML + "</tr><tr><td></td>"
-                            }
-
-
-                        }
-                        historyTableContent = dateHTML + "</tr>"
-                        console.log(historyTableContent)
-                        $("#history-table-body").html(historyTableContent);
+                        recreate_history_table(data)
 
                         document.getElementById('notification_head_strong_id').innerHTML = "Complimentary"
                         document.getElementById('notification_body_id').innerHTML = "Given to <b> " + mydata.room + " as <b>Complimentary</b>"
@@ -635,6 +579,69 @@
             }
         }
         return output;
+    }
+
+    function recreate_history_table(data) {
+
+        let x = data.history
+        console.log(x)
+        dateHTML = ""
+        console.log(Object.keys(x))
+
+        for (var date of Object.keys(x)) {
+
+            x = data.history
+            dateHTML = ""
+            for (var date of Object.keys(x)) {
+
+                dateHTML += "<tr><td>" + date + "</td>"
+
+                for (var room of Object.keys(x[date])) {
+                    let count = 0
+                    roomHTML = "<td>" + room + "</td>"
+                    console.log(x[date][room])
+                    for (var info of Object.values(x[date][room])) {
+
+                        arrLen = info.length
+                        bottleNameQuantity = ""
+                        if (count == 2) {
+                            for (i = 0; i < arrLen; i++) {
+                                bottleNameQuantity += "<tr><td>"
+                                    + "<a class='btn-remove-entry text-danger' href='#' data-history-detail="
+                                    + info[i]
+                                    + "><i class='bi bi-trash'></button>"
+                                    + "</td></tr>"
+
+                            }
+                        } else {
+                            for (i = 0; i < arrLen; i++) {
+                                bottleNameQuantity += "<tr><td>"
+                                    + info[i]
+                                    + "</td></tr>"
+                            }
+                        }
+
+                        bottleNameQuantity = "<td><table>" + bottleNameQuantity + "</table></td>"
+                        roomHTML += bottleNameQuantity
+                        count = count + 1
+                    }
+                    dateHTML = dateHTML + roomHTML + "</tr><tr><td></td>"
+                }
+
+
+            }
+            historyTableContent = dateHTML + "</tr>"
+            console.log(historyTableContent)
+            $("#history-table-body").html(historyTableContent);
+
+
+        }
+        historyTableContent = dateHTML + "</tr>"
+        console.log(historyTableContent)
+        $("#history-table-body").html(historyTableContent);
+
+        console.log("here it is ")
+
     }
 
 </script>

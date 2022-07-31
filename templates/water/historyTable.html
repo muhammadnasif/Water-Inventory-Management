@@ -1,6 +1,6 @@
 <div class="container my-sm-2">
     <div class="col-sm shadow-lg p-3 m-1 bg-body rounded">
-        <table class="table table-hover ">
+        <table class="table table-hover " id="history_table_id">
 
             <thead>
             <tr>
@@ -8,6 +8,7 @@
                 <th class="col"> Room</th>
                 <th class="col"> Bottle</th>
                 <th class="col"> Quantity</th>
+                <th class="col">Action</th>
             </tr>
             </thead>
 
@@ -22,35 +23,51 @@
 
                     {% for room,info in rooms.items %}
 
-                            <td>{{ room }}</td>
-                            <td>
-                                <table>
-                                    {% for bottle_name in info.bottle %}
-                                        <tr>
-                                            <td>{{ bottle_name }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </table>
+                        <td>{{ room }}</td>
+                        <td>
+                            <table>
+                                {% for bottle_name in info.bottle %}
+                                    <tr>
+                                        <td>{{ bottle_name }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
 
-                            </td>
-                            <td>
-                                <table>
-                                    {% for bottle_quantity in info.quantity %}
-                                        <tr>
-                                            <td>
-                                                {{ bottle_quantity }}
-                                            </td>
-                                        </tr>
+                        </td>
+                        <td>
+                            <table>
+                                {% for bottle_quantity in info.quantity %}
+                                    <tr>
+                                        <td>
+                                            {{ bottle_quantity }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </td>
+                        <td>
+                            <table>
+                                {% for history_detail_id in info.history_detail_id %}
+                                    <tr>
+                                        <td>
+                                            <a class="btn-remove-entry text-danger"
+                                               href="#"
+                                               data-history-detail="{{ history_detail_id }}"><i class="bi bi-trash"></i>
+                                            </a>
+                                        </td>
 
-                                    {% endfor %}
-                                </table>
-                            </td>
+                                    </tr>
+
+                                {% endfor %}
+                            </table>
+
+                        </td>
                         </tr>
                         <tr>
-                            <td></td>
+                        <td></td>
                     {% endfor %}
 
-                </tr>
+                    </tr>
 
             {% endfor %}
 

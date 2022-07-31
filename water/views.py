@@ -305,11 +305,13 @@ def getHistory():
                 context[str(info["date"])][str(info["room_id"])] = {
                     "bottle": [f"{brand} | {size}L (Compl.)"],
                     "quantity": [history_detail[0]["quantity"]],
+                    "history_detail_id": [history_detail[0]['id']]
                 }
             else:
                 context[str(info["date"])][str(info["room_id"])] = {
                     "bottle": [f"{brand} | {size}L"],
                     "quantity": [history_detail[0]["quantity"]],
+                    "history_detail_id": [history_detail[0]['id']]
                 }
 
 
@@ -317,9 +319,11 @@ def getHistory():
             if history_detail[0]["notcomplimentary"] == 0:
                 context[str(info["date"])][info["room_id"]]["bottle"].append(f"{brand} | {size}L (Compl.)")
                 context[str(info["date"])][info["room_id"]]["quantity"].append(history_detail[0]["quantity"])
+                context[str(info["date"])][info["room_id"]]["history_detail_id"].append(history_detail[0]["id"])
             else:
                 context[str(info["date"])][info["room_id"]]["bottle"].append(f"{brand} | {size}L")
                 context[str(info["date"])][info["room_id"]]["quantity"].append(history_detail[0]["quantity"])
+                context[str(info["date"])][info["room_id"]]["history_detail_id"].append(history_detail[0]["id"])
 
     return context
 
@@ -421,6 +425,30 @@ def HistoryDetailsUndo(request):
 
         object.delete()
     request.session['undo_id'] = tempList
+    context = {
+        'history': getHistory()
+    }
+    return JsonResponse(context)
+
+
+# When delete button is invoked from the staff. This function is used to remove
+# the correspoding entry.
+def remove_entry(request):
+    history_detail_id = request.GET['history_detail_id']
+
+    print(history_detail_id)
+
+    object = HISTORYDETAIL.objects.get(id=history_detail_id)
+
+    # increase the corresponding stock by the decremented quantity. Basically
+    # updating the stock of the corresponding bottle.
+    soldQuantity = object.quantity
+    bottleStock = STOCK.objects.get(stock_name_id=object.bottle_detail.pk)
+    fixedStock = STOCK(id=bottleStock.pk, stock_name_id=bottleStock.stock_name_id,
+                       quantity=bottleStock.quantity + soldQuantity)
+    fixedStock.save()
+
+    object.delete()
     context = {
         'history': getHistory()
     }

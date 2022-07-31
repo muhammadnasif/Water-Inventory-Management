@@ -12,4 +12,6 @@ urlpatterns = [
     path('filtersearch', views.FilterSearch, name='FilterSearch'),
     path('historydetailsundo', views.HistoryDetailsUndo, name='HistoryDetailsUndo'),
     path('sellbottlecomplimentary', views.sellBottleComplimentary, name='sellBottleComplimentary'),
+    path('remove_entry/', views.remove_entry, name='remove_entry'),
+
 ]
