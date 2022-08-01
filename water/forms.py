@@ -35,7 +35,7 @@ class SellBottleForm(forms.Form):
             Div(
                 Button('complimentary', 'Complimentary', css_class='btn-dark btn-outline-success text-white m-sm-3'),
                 Button('sell', 'Sell Bottle', css_class='btn-dark btn-outline-success text-white m-sm-3'),
-                Button('undo', 'Undo', css_class='btn-dark btn-outline-success text-white m-sm-3'),
+                # Button('undo', 'Undo', css_class='btn-dark btn-outline-success text-white m-sm-3'),
                 css_class='d-flex justify-content-center align-content-center m-2',
             ),
         )
