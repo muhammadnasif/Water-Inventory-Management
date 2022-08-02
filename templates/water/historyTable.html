@@ -1,3 +1,5 @@
+{% include 'commonHTML/confirm_delete.html' %}
+
 <div class="container my-sm-2">
     <div class="col-sm shadow-lg p-3 m-1 bg-body rounded">
         <table class="table table-hover " id="history_table_id">
@@ -52,7 +54,11 @@
                                         <td>
                                             <a class="btn-remove-entry text-danger"
                                                href="#"
-                                               data-history-detail="{{ history_detail_id }}"><i class="bi bi-trash"></i>
+                                               data-history-detail="{{ history_detail_id }}"
+                                               data-bs-target="#confirm_delete_modal"
+                                               data-bs-toggle="modal">
+
+                                                <i class="bi bi-trash"></i>
                                             </a>
                                         </td>
 

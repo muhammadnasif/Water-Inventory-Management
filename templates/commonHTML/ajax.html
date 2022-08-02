@@ -142,10 +142,9 @@
     })
 
     $("#admin-bottle-table-body").on("click", ".btn-del", function () {
-        console.log("delete button clicked");
         let id = $(this).attr('data-sid')
         let csrf_token = $('input[name="csrfmiddlewaretoken"]').val()
-        console.log(id)
+
         mythis = this
         mydata = {
             sid: id,
@@ -156,9 +155,7 @@
             method: "POST",
             data: mydata,
             success: function (data) {
-                console.log(data);
                 if (data.status == 1) {
-                    console.log('Data deleted successfully')
                     $(mythis).closest("tr").fadeOut()
                 }
             }
@@ -185,13 +182,9 @@
                 success: function (data) {
                     $("#create-brand-form")[0].reset();
 
-                    {#console.log("Brand Created")#}
-                    {#console.log(data.brand)#}
                     x = data.brand
                     len = x.length
-                    console.log("Length -- " + len)
                     for (key of Object.values(x)) {
-                        console.log(key)
                         main_content += "<tr><td class='col'><div class='text-center'>" + key.brand_name + "</div></td><td>" +
                             "<div class='text-center'><input type='button' class='btn-sm btn-dark btn-del' value='Delete' " +
                             "data-sid='" + key.brand_name + "'></div></td></tr>"
@@ -229,13 +222,10 @@
     })
 
     $("#admin-brand-table-body").on("click", ".btn-del", function () {
-        console.log("delete button clicked");
         let id = $(this).attr('data-sid')
         let csrf_token = $('input[name="csrfmiddlewaretoken"]').val()
         output = ""
         main_content = ""
-
-        console.log(id)
         mythis = this
         mydata = {
             sid: id,
@@ -247,7 +237,6 @@
             data: mydata,
             success: function (data) {
                 if (data.status == 1) {
-                    console.log('Data deleted successfully')
                     $(mythis).closest("tr").fadeOut()
 
 
@@ -286,7 +275,6 @@
 
         let csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
 
-        console.log("Create Size form clicked")
 
         main_content = ""
         output = ""
@@ -303,12 +291,9 @@
                 success: function (data) {
                     $("#create-size-form")[0].reset();
 
-                    {#console.log("Brand Created")#}
-                    {#console.log(data.brand)#}
                     x = data.sizeTable
 
                     for (key of Object.values(x)) {
-                        console.log(key)
                         main_content += "<tr><td class='col'><div class='text-center'>" + key.bottle_size + "</div></td><td>" +
                             "<div class='text-center'><input type='button' class='btn-sm btn-dark btn-del' value='Delete' " +
                             "data-sid='" + key.bottle_size + "'></div></td></tr>"
@@ -319,8 +304,6 @@
                     {#x = data.bottleSize#}
                     output = "<th class='col'> Brand/Size</th>"
                     for (key of Object.values(x)) {
-                        console.log(key.bottle_size)
-                        console.log("<th class='col'> " + key.bottle_size + "</th>")
                         output += "<th class='col'> " + key.bottle_size + "</th>"
                     }
                     output = "<tr>" + output + "</tr>"
@@ -351,13 +334,11 @@
     })
 
     $("#admin-size-table-body").on("click", ".btn-del", function () {
-        console.log("delete button clicked");
         let id = $(this).attr('data-sid')
         let csrf_token = $('input[name="csrfmiddlewaretoken"]').val()
         output = ""
         main_content = ""
 
-        console.log(id)
         mythis = this
         mydata = {
             sid: id,
@@ -368,16 +349,13 @@
             method: "POST",
             data: mydata,
             success: function (data) {
-                console.log(data)
                 if (data.status == 1) {
-                    console.log('Data deleted successfully')
                     $(mythis).closest("tr").fadeOut()
 
 
                     x = data.sizeTable
 
                     for (key of Object.values(x)) {
-                        console.log(key)
                         main_content += "<tr><td class='col'><div class='text-center'>" + key.bottle_size + "</div></td><td>" +
                             "<div class='text-center'><input type='button' class='btn-sm btn-dark btn-del' value='Delete' " +
                             "data-sid='" + key.bottle_size + "'></div></td></tr>"
@@ -388,8 +366,6 @@
                     {#x = data.bottleSize#}
                     output = "<th class='col'> Brand/Size</th>"
                     for (key of Object.values(x)) {
-                        console.log(key.bottle_size)
-                        console.log("<th class='col'> " + key.bottle_size + "</th>")
                         output += "<th class='col'> " + key.bottle_size + "</th>"
                     }
                     output = "<tr>" + output + "</tr>"
@@ -423,8 +399,6 @@
         let dTo = $('#id_DateTo').val();
         let csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
 
-        console.log(dFrom)
-        console.log(dTo)
         mydata = {
             dateFrom: dFrom,
             dateTo: dTo,
@@ -466,7 +440,6 @@
 
                     }
                     historyTableContent = dateHTML + "</tr>"
-                    console.log(historyTableContent)
                     $("#history-table-body").html(historyTableContent);
 
                 }
@@ -480,8 +453,6 @@
         let dTo = $('#id_DateTo').val();
         let csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
 
-        console.log(dFrom)
-        console.log(dTo)
         mydata = {
             dateFrom: dFrom,
             dateTo: dTo,
@@ -494,10 +465,7 @@
                 method: 'POST',
                 data: mydata,
                 success: function (data) {
-
                     recreate_history_table(data)
-
-                    console.log(historyTableContent)
                     $("#history-table-body").html(historyTableContent);
 
                 }
@@ -508,22 +476,9 @@
 
 
     $("#history_table_id").on("click", ".btn-remove-entry", function () {
-        console.log("btn remove pressed")
 
-        mydata = {
-            history_detail_id: $(this).attr('data-history-detail')
-        }
-
-        $.ajax(
-            {
-                url: "{% url 'remove_entry' %}",
-                method: 'GET',
-                data: mydata,
-                success: function (data) {
-                    recreate_history_table(data)
-                }
-            }
-        )
+        let histoy_detail_id = $(this).attr('data-history-detail')
+        $("#confirm_delete_button").attr('data-ids', histoy_detail_id)
 
     })
 
@@ -570,6 +525,26 @@
 
     })
 
+
+    $('#confirm_delete_button').click(function () {
+
+        mydata = {
+            history_detail_id: $(this).attr('data-ids')
+        }
+
+        $.ajax(
+            {
+                url: "{% url 'remove_entry' %}",
+                method: 'GET',
+                data: mydata,
+                success: function (data) {
+                    recreate_history_table(data)
+                }
+            }
+        )
+
+    })
+
     function getData(obj) {
         var myData = obj.data.item, i, output = '';
 
@@ -584,9 +559,7 @@
     function recreate_history_table(data) {
 
         let x = data.history
-        console.log(x)
         dateHTML = ""
-        console.log(Object.keys(x))
 
         for (var date of Object.keys(x)) {
 
@@ -599,7 +572,6 @@
                 for (var room of Object.keys(x[date])) {
                     let count = 0
                     roomHTML = "<td>" + room + "</td>"
-                    console.log(x[date][room])
                     for (var info of Object.values(x[date][room])) {
 
                         arrLen = info.length
@@ -607,7 +579,7 @@
                         if (count == 2) {
                             for (i = 0; i < arrLen; i++) {
                                 bottleNameQuantity += "<tr><td>"
-                                    + "<a class='btn-remove-entry text-danger' href='#' data-history-detail="
+                                    + "<a class='btn-remove-entry text-danger' href='#' data-bs-target='#confirm_delete_modal' data-bs-toggle='modal' data-history-detail="
                                     + info[i]
                                     + "><i class='bi bi-trash'></button>"
                                     + "</td></tr>"
@@ -631,16 +603,12 @@
 
             }
             historyTableContent = dateHTML + "</tr>"
-            console.log(historyTableContent)
-            $("#history-table-body").html(historyTableContent);
 
+            $("#history-table-body").html(historyTableContent);
 
         }
         historyTableContent = dateHTML + "</tr>"
-        console.log(historyTableContent)
         $("#history-table-body").html(historyTableContent);
-
-        console.log("here it is ")
 
     }
 
