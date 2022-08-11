@@ -389,11 +389,13 @@ def FilterSearch(request):
                 context[str(info["date"])][str(info["room_id"])] = {
                     "bottle": [f"{brand} | {size}L (Compl.)"],
                     "quantity": [history_detail[0]["quantity"]],
+                    "history_detail_id": [history_detail[0]['id']]
                 }
             else:
                 context[str(info["date"])][str(info["room_id"])] = {
                     "bottle": [f"{brand} | {size}L"],
                     "quantity": [history_detail[0]["quantity"]],
+                    "history_detail_id": [history_detail[0]['id']]
                 }
 
 
@@ -401,10 +403,11 @@ def FilterSearch(request):
             if history_detail[0]["notcomplimentary"] == 0:
                 context[str(info["date"])][info["room_id"]]["bottle"].append(f"{brand} | {size}L (Compl.)")
                 context[str(info["date"])][info["room_id"]]["quantity"].append(history_detail[0]["quantity"])
+                context[str(info["date"])][info["room_id"]]["history_detail_id"].append(history_detail[0]["id"])
             else:
                 context[str(info["date"])][info["room_id"]]["bottle"].append(f"{brand} | {size}L")
                 context[str(info["date"])][info["room_id"]]["quantity"].append(history_detail[0]["quantity"])
-
+                context[str(info["date"])][info["room_id"]]["history_detail_id"].append(history_detail[0]["id"])
     return JsonResponse({'history': context})
 
 

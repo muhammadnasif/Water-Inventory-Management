@@ -25,6 +25,9 @@
                     if (data.status == 1) {
                         $("form")[0].reset();
 
+
+                        console.log(data)
+
                         recreate_history_table(data)
 
 
@@ -415,31 +418,10 @@
                     $('#id_DateTo').val("mm/dd/yyyy");
                     $("form")[0].reset();
 
-                    x = data.history
-                    dateHTML = ""
-                    for (var date of Object.keys(x)) {
+                    console.log(data)
 
-                        dateHTML += "<tr><td>" + date + "</td>"
+                    recreate_history_table(data);
 
-                        for (var room of Object.keys(x[date])) {
-
-                            roomHTML = "<td>" + room + "</td>"
-                            for (var info of Object.values(x[date][room])) {
-
-                                arrLen = info.length
-                                bottleNameQuantity = ""
-                                for (i = 0; i < arrLen; i++) {
-                                    bottleNameQuantity += "<tr><td>" + info[i] + "</td></tr>"
-                                }
-                                bottleNameQuantity = "<td><table>" + bottleNameQuantity + "</table></td>"
-                                roomHTML += bottleNameQuantity
-                            }
-                            dateHTML = dateHTML + roomHTML + "</tr><tr><td></td>"
-                        }
-
-
-                    }
-                    historyTableContent = dateHTML + "</tr>"
                     $("#history-table-body").html(historyTableContent);
 
                 }
