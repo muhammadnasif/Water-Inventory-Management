@@ -236,8 +236,6 @@ def addNewStockMethod(request):
 # create a new record of bottle in the BOTTLE table.
 # == createNewBottleMethod() ==
 def createNewBottleMethod(request):
-    print(request.GET)
-    print(request.POST)
     if request.method == "POST":
         form = CreateNewBottleForm(request.POST)
         if form.is_valid():
@@ -382,7 +380,7 @@ def FilterSearch(request, entry=True):
     dTo = request.session['dTo']
 
     if dTo == "":
-        dTo = date.today()
+        dTo = date.today
 
     context = {}
 

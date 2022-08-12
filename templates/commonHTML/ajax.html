@@ -25,11 +25,7 @@
                     if (data.status == 1) {
                         $("form")[0].reset();
 
-
-                        console.log(data)
-
                         recreate_history_table(data)
-
 
                         document.getElementById('notification_head_strong_id').innerHTML = "Success"
                         document.getElementById('notification_body_id').innerHTML = "Bottle sold to <b>" + mydata.room + "</b>"
@@ -418,8 +414,6 @@
                     {#$('#id_DateTo').val("mm/dd/yyyy");#}
                     $("form")[0].reset();
 
-                    console.log(data)
-
                     recreate_history_table(data);
 
                     $("#history-table-body").html(historyTableContent);
@@ -447,7 +441,6 @@
                 method: 'POST',
                 data: mydata,
                 success: function (data) {
-                    console.log(data)
                     recreate_history_table(data)
                     $("#history-table-body").html(historyTableContent);
 
@@ -516,14 +509,12 @@
             dFrom : $('#id_DateFrom').val(),
             dTo : $('#id_DateTo').val()
         }
-        console.log(mydata)
         $.ajax(
             {
                 url: "{% url 'remove_entry' %}",
                 method: 'GET',
                 data: mydata,
                 success: function (data) {
-                    console.log(data)
                     recreate_history_table(data)
                 }
             }
