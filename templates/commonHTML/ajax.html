@@ -414,8 +414,8 @@
                 method: 'POST',
                 data: mydata,
                 success: function (data) {
-                    $('#id_DateFrom').val("mm/dd/yyyy");
-                    $('#id_DateTo').val("mm/dd/yyyy");
+                    {#$('#id_DateFrom').val("mm/dd/yyyy");#}
+                    {#$('#id_DateTo').val("mm/dd/yyyy");#}
                     $("form")[0].reset();
 
                     console.log(data)
@@ -447,6 +447,7 @@
                 method: 'POST',
                 data: mydata,
                 success: function (data) {
+                    console.log(data)
                     recreate_history_table(data)
                     $("#history-table-body").html(historyTableContent);
 
@@ -511,15 +512,18 @@
     $('#confirm_delete_button').click(function () {
 
         mydata = {
-            history_detail_id: $(this).attr('data-ids')
+            history_detail_id: $(this).attr('data-ids'),
+            dFrom : $('#id_DateFrom').val(),
+            dTo : $('#id_DateTo').val()
         }
-
+        console.log(mydata)
         $.ajax(
             {
                 url: "{% url 'remove_entry' %}",
                 method: 'GET',
                 data: mydata,
                 success: function (data) {
+                    console.log(data)
                     recreate_history_table(data)
                 }
             }

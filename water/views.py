@@ -1,5 +1,6 @@
 from datetime import date
-
+import json
+import requests
 from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
@@ -35,6 +36,11 @@ def index(request):
 def LoadHome(request):
     if 'username' in request.session:
         if request.session['designation'] != 'ceo':
+
+            if 'dFrom' in request.session:
+                del request.session['dFrom']
+                del request.session['dTo']
+
             context = {
                 'SellBottleForm': SellBottleForm(),
                 'history': getHistory(),
@@ -171,10 +177,14 @@ def sellBottleMethod(request, notComp=1):
                 #     print("Not sufficient bottle in stock")
                 else:
                     notEnough = 0
-    context = {
-        'status': notEnough,
-        'history': getHistory(),
-    }
+
+    context = {}
+    context['status'] = notEnough
+    if 'dFrom' in request.session:
+        context['history'] = FilterSearch(request, False)['history']
+    else:
+        context['history'] = getHistory()
+
     return JsonResponse(context)
 
 
@@ -362,16 +372,23 @@ def GetStockTableInfo():
     return context, bottleSize
 
 
-# this method is for customer history filter
-def FilterSearch(request):
-    dFrom = request.POST['dateFrom']
-    dTo = request.POST['dateTo']
+# this method is called to filter a bottle entry
+def FilterSearch(request, entry=True):
+    if request.method == "POST" and entry:
+        request.session['dFrom'] = request.POST['dateFrom']
+        request.session['dTo'] = request.POST['dateTo']
+
+    dFrom = request.session['dFrom']
+    dTo = request.session['dTo']
+
+    if dTo == "":
+        dTo = date.today()
 
     context = {}
 
     # history = list(HISTORY.objects.filter(date=today).values())
     # history_prev = list(HISTORY.objects.filter(date=today).values())
-    history = list(HISTORY.objects.filter(date__gte=dFrom, date__lte=dTo).values())
+    history = list(HISTORY.objects.filter(date__gte=dFrom, date__lte=dTo).order_by('-date').values())
 
     for info in history:
         history_detail = list(HISTORYDETAIL.objects.filter(history_id=info["id"]).values())
@@ -408,7 +425,13 @@ def FilterSearch(request):
                 context[str(info["date"])][info["room_id"]]["bottle"].append(f"{brand} | {size}L")
                 context[str(info["date"])][info["room_id"]]["quantity"].append(history_detail[0]["quantity"])
                 context[str(info["date"])][info["room_id"]]["history_detail_id"].append(history_detail[0]["id"])
-    return JsonResponse({'history': context})
+
+    return {'history': context}
+
+
+def FilterSearch_middleware(request):
+    context = FilterSearch(request)
+    return JsonResponse(context)
 
 
 # this method is for customer history undo move
@@ -439,8 +462,6 @@ def HistoryDetailsUndo(request):
 def remove_entry(request):
     history_detail_id = request.GET['history_detail_id']
 
-    print(history_detail_id)
-
     object = HISTORYDETAIL.objects.get(id=history_detail_id)
 
     # increase the corresponding stock by the decremented quantity. Basically
@@ -452,7 +473,12 @@ def remove_entry(request):
     fixedStock.save()
 
     object.delete()
-    context = {
-        'history': getHistory()
-    }
+
+    context = {}
+
+    if 'dFrom' in request.session:
+        return redirect(FilterSearch_middleware)
+    else:
+        context['history'] = getHistory()
+
     return JsonResponse(context)
